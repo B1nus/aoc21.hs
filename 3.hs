@@ -1,23 +1,23 @@
 ones [] = [0,0,0,0,0,0,0,0,0,0,0,0]
-ones (n:xn) = add_bits n (ones xn)
+ones (n:xn) = [a + b | (a,b) <- zip n (ones xn)]
+diff i = [2 * o - length i | o <- ones i]
+-- diff = ones - zeros = ones - (length - ones) = ones - length - (- ones) =
+-- = ones + ones - length = 2 * ones - length
 
-zeros i = [length i - x | x <- ones i]
+filter_bits _ _ [x] = x
+filter_bits cond i l = filter_bits cond (i + 1) filtered
+  where filtered  = [x | x <- l, cond (diff l) x i]
 
--- Int instead of Integer since length gives out an Int and not an Integer
---  PS: Int is statically sized. Integer is arbitrary precision (just like python, haskell was first ofc)
-add_bits :: [Int] -> [Int] -> [Int]
-add_bits [] [] = []
-add_bits (a:xa) (b:xb) = ((a + b):(add_bits xa xb))
+bits_to_int [] = 0
+bits_to_int (b:bs) = b * 2 ^ length bs + bits_to_int bs
 
-gamma_bits :: [[Int]] -> [Int]
-gamma_bits i = [if o > z then 1 else 0 | (o, z) <- zip (ones i) (zeros i)]
-epsilon_bits i = [1 - x | x <- gamma_bits i]
+oxygen l = bits_to_int (filter_bits cond 0 l)
+  where cond = \d x i -> (x!!i == 1) == (d!!i >= 0)
 
-bits_to_int x [] = x
-bits_to_int x (b:xb) = bits_to_int (x * 2 + b) xb
+scrubber l = bits_to_int (filter_bits cond 0 l)
+  where cond = \d x i -> (x!!i == 1) == (d!!i < 0)
 
-gamma = bits_to_int 0 (gamma_bits input)
-epsilon = bits_to_int 0 (epsilon_bits input)
+prod l = (oxygen l) * (scrubber l)
 
 input :: [[Int]]
 input = [
