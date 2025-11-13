@@ -6,9 +6,13 @@ type Line = [(Int, Int)] -- Literally just all points in the line. Haskell is la
 parseLine = toLine . map (map read . splitOn ",") . splitOn " -> "
   where
     toLine :: [[Int]] -> Line
-    toLine [[x1, y1], [x2, y2]] | x1 == x2  = [(x1,y) | y <- [min y1 y2..max y1 y2]]
-                                | y1 == y2  = [(x,y1) | x <- [min x1 x2..max x1 x2]]
-                                | otherwise = []
+    toLine [[x1, y1], [x2, y2]] = [(x i, y i) | i <- [0..d]]
+      where
+        dx  = signum (x2 - x1)
+        dy  = signum (y2 - y1)
+        x i = x1 + dx * i
+        y i = y1 + dy * i
+        d   = max (abs (x2 - x1)) (abs (y2 - y1))
 
 parse = map parseLine . lines
 
