@@ -34,7 +34,7 @@ score :: Board -> Int -> Int
 score b n = n * sum (map unwrap $ concat b)
 
 solve :: [Int] -> [Board] -> Int
-solve ls bs = snd $ minimum $ map (`play` ls) bs
+solve ls bs = snd $ maximum $ map (`play` ls) bs
 
 parse :: String -> ([Int], [Board])
 parse s = (parseList l, parseBoards r)
