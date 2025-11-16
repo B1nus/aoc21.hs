@@ -9,8 +9,9 @@ import Data.List.Split
 
 parseList = map read . splitOn ","
 average xs = sum xs `div` length xs
-cost x = sum . map (\a -> abs (a - x)) -- :: Integer -> [Integer] -> Integer
-answer i = snd $ minimum $ map (\x -> (x `cost` xs, x)) [l..r]
+arsum n = (n*n + n) `div` 2 -- Thank's Gauss the goat
+cost x = sum . map (\a -> arsum $ abs (a - x)) -- :: Integer -> [Integer] -> Integer
+answer i = minimum $ map (`cost` xs) [l..r]
   where
     xs = parseList i
     l = minimum xs
