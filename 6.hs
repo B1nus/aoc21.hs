@@ -1,6 +1,5 @@
 import Data.List.Split
 
-parseList :: String -> [Int]
 parseList = map read . splitOn ","
 
 translate xs = [f i xs | i <- [0..8]]
@@ -13,5 +12,5 @@ nextDay [a,b,c,d,e,f,g,h,i] = [b,c,d,e,f,g,h + a,i,a]
 simulate fs 0         = fs
 simulate fs d | d > 0 = simulate (nextDay fs) (d - 1)
 
-answer s = sum $ simulate (translate $ parseList s) 80
+answer s d = sum $ simulate (translate $ parseList s) d
 
