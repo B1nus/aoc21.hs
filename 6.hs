@@ -2,9 +2,9 @@ import Data.List.Split
 
 parseList = map read . splitOn ","
 
-translate xs = [f i xs | i <- [0..8]]
+translate xs = [count i xs | i <- [0..8]]
   where
-    f x = sum . map (const 1) . filter (==x)
+    count x = length . filter (==x)
 
 -- Instead of modelling each number. We can model the number of fish with any given timer
 nextDay [a,b,c,d,e,f,g,h,i] = [b,c,d,e,f,g,h + a,i,a]
