@@ -1,6 +1,7 @@
 -- Imperative idea. (Look up recursive solution later)
 -- Use a stack with each opening brace. When poping, check that
 -- the end-brace matches the start brace on the stack.
+import Data.List
 
 data Delim = Bracket | Angle | Paren | Brace deriving (Eq,Show)
 data Token = Start Delim | End Delim deriving (Eq, Show)
@@ -29,11 +30,13 @@ illegal = illegal' []
                                      | otherwise = Illegal d ts
 
 points :: Delim -> Int
-points Paren   = 3
-points Bracket = 57
-points Brace   = 1197
-points Angle   = 25137
+points Paren   = 1
+points Bracket = 2
+points Brace   = 3
+points Angle   = 4
 
-resToPoints (Stack _)   = 0
-resToPoints (Illegal d ts) = points d
+calc (Stack ds) = calc' 0 ds
+  where calc' p (d:ds) = calc' (p * 5 + points d) ds
+        calc' p []     = p
+calc _ = 0
 
