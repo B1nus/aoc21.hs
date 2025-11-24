@@ -18,6 +18,8 @@ isFlash Flash = True
 isFlash _     = False
 isFlashed Flashed = True
 isFlashed _       = False
+isNumber x (Level l) | x == l = True
+isNumber _ _      = False
 
 allPs :: Map -> [[(Int,Int)]]
 allPs (Map m) = [[(x,y) | x <- xs] | y <- ys]
@@ -64,6 +66,22 @@ steps map 0 = (map, 0)
 steps map n = (finalMap, flashes + nextFlashed)
   where (nextMap, flashes) = step map
         (finalMap, nextFlashed) = steps nextMap (n - 1)
+
+whenSync :: Map -> Int
+whenSync = whenSync' 0
+  where whenSync' n map | synced map = n
+                        | otherwise  = whenSync' (n + 1) (fst $ step map)
+
+synced :: Map -> Bool
+synced (Map m) = all (all $ isNumber 0) m
+-- firstFlash :: Map -> [[Int]]
+-- firstFlash :: 
+--
+-- intervals :: Map -> [[Int]]
+-- intervals = undefined
+--
+-- sync :: Map -> Int
+-- sync = foldr lcm 1 . concat . intervals
 
 adj m (x,y) = catMaybes [lvl m p | p <- ps, any (p `elem`) $ allPs m ]
   where ys = [(y-1)..(y+1)]
