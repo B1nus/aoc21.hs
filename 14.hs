@@ -49,5 +49,5 @@ maxMinusMin map = max - min
 answer :: String -> Int
 answer s = maxMinusMin chars'
   where (pairs,chars,rules) = readInput s
-        (pairs',chars') = insertRulesTimes 10 rules pairs chars
+        (pairs',chars') = insertRulesTimes 40 rules pairs chars
 
