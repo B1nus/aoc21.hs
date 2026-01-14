@@ -1,18 +1,23 @@
 {
   nixpkgs ? import <nixpkgs> { },
-  compiler ? "ghc984",
+  ghcVersion ? "9103",
 }:
 
 let
   inherit (nixpkgs) pkgs;
-  ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps: with ps; [
-    heap
+  ghc = pkgs.haskell.packages.${"ghc" + ghcVersion}.ghcWithPackages (ps: with ps; [
+    heaps
     QuickCheck
   ]);
 in
 
 pkgs.stdenv.mkDerivation {
   name = "haskell-tajm";
-  buildInputs = [ ghc ];
-  shellHook = "eval $(egrep ^export ${ghc}/bin/ghc";
+  buildInputs = (with pkgs; [
+	(haskell-language-server.override { supportedGhcVersions = [ ghcVersion ]; })
+	hlint
+  ]) ++ [
+  	ghc
+  ];
+  # shellHook = "eval $(egrep ^export ${ghc}/bin/ghc";
 }
