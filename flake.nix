@@ -10,11 +10,12 @@
 		devShells = forAllSystems (
 			system: let
 				pkgs = nixpkgs.legacyPackages.${system};
+				ghcVersion = "9103";
 				ghc = pkgs.haskell.packages.${"ghc" + ghcVersion}.ghcWithPackages (ps: with ps; [
 					heaps
 					QuickCheck
 				]);
-				hls = (haskell-language-server.override { supportedGhcVersions = [ ghcVersion ]; });
+				hls = (pkgs.haskell-language-server.override { supportedGhcVersions = [ ghcVersion ]; });
 				hlint = pkgs.hlint;
 			in {
 				default = pkgs.mkShell {
